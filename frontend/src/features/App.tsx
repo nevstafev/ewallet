@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'wouter';
-import AccountInfo from '../components/AccountInfo/AccountInfo';
+import AccountInfo from './accountInfo/AccountInfo';
 import Layout from '../components/Layout/Layout';
 import Accounts from './accounts/Accounts';
 

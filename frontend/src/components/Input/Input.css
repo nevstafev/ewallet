@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  justify-content: space-around;
+  flex-basis: 150 px;
+  padding: 16px;
+}
+
+.input {
+  font-family: monospace;
+  font-size: 20px;
+  max-width: 150px;
+}
+
+.button {
+  font-family: monospace;
+  font-size: 20px;
+}

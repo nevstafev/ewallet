@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import styles from './CreateAccount.css';
+import Card from '../../../components/Card/Card';
 
 type CreateAccountProps = {
   create: (name: string) => Promise<void>;
@@ -17,7 +17,7 @@ const CreateAccount: React.FC<CreateAccountProps> = ({ create, isLoading }) => {
   }, [create, name]);
 
   return (
-    <div className={styles.container}>
+    <Card>
       <input
         type='text'
         value={name}
@@ -28,7 +28,7 @@ const CreateAccount: React.FC<CreateAccountProps> = ({ create, isLoading }) => {
       <button disabled={isLoading} type='submit' onClick={handleCreate}>
         Create
       </button>
-    </div>
+    </Card>
   );
 };
 

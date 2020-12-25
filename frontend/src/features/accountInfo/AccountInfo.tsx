@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import useAccountInfo from '../../hooks/useAccountInfo';
 import useAccounts from '../../hooks/useAccounts';
-import useInput from '../../hooks/useInput';
-import styles from './AccountInfo.css';
 import Card from '../../components/Card/Card';
+import Select from '../../components/Select/Select';
 import Input from '../../components/Input/Input';
 import Transfers from '../../features/accountInfo/compmentns/Transfers/Transfers';
+import Label from '../../components/Label/Label';
 
 type AccountInfoProps = {
   id: string;
@@ -13,11 +13,9 @@ type AccountInfoProps = {
 
 const AccountInfo: React.FC<AccountInfoProps> = ({ id }) => {
   const accountId = useMemo(() => parseInt(id), [id]);
-  const { account, transfers, withdrawMoney, depositMoney, transferMoney, isLoading } = useAccountInfo(accountId);
+  const { account, transfers, withdrawMoney, depositMoney, transferMoney } = useAccountInfo(accountId);
   const { accounts, isLoading: isAccountsLoading } = useAccounts();
   const accountsToSelect = useMemo(() => accounts.filter(({ id }) => id !== accountId), [accountId, accounts]);
-
-  const { bind: bindTransfer, reset: transferReset, value: amountToTransfer } = useInput('');
 
   const [selected, setSelected] = useState<number>(accountsToSelect[0]?.id);
 
@@ -28,10 +26,12 @@ const AccountInfo: React.FC<AccountInfoProps> = ({ id }) => {
     [withdrawMoney]
   );
 
-  const handleTransfer = useCallback(async () => {
-    await transferMoney(selected, parseInt(amountToTransfer));
-    transferReset();
-  }, [transferReset, transferMoney, amountToTransfer, selected]);
+  const handleTransfer = useCallback(
+    async (amountToTransfer) => {
+      await transferMoney(selected, parseInt(amountToTransfer));
+    },
+    [transferMoney, selected]
+  );
 
   const handleDeposit = useCallback(
     async (amountToDeposit) => {
@@ -50,33 +50,19 @@ const AccountInfo: React.FC<AccountInfoProps> = ({ id }) => {
       <Input buttonText='Withdraw' onSubmit={handleWithdraw} />
 
       {!isAccountsLoading && accountsToSelect.length > 0 && (
-        <Card>
-          <input className={styles.input} {...bindTransfer} type='number' />
-          <select
-            onChange={(e) => {
-              setSelected(parseInt(e.target.value));
-            }}
-            value={selected}
-            defaultValue='DEFAULT'
-          >
-            <option value='DEFAULT' disabled>
-              Choose account
-            </option>
-            {accountsToSelect.map(({ id, name }) => (
-              <option key={id} value={id}>
-                {name}
-              </option>
-            ))}
-          </select>
-          <button type='submit' onClick={handleTransfer} disabled={isLoading}>
-            Transfer money
-          </button>
+        <Card size={'medium'}>
+          <Label>Transfer money to another account</Label>
+          <Select
+            onChange={(value) => setSelected(parseInt(value))}
+            options={accountsToSelect.map(({ id, name }) => ({ value: String(id), label: name }))}
+          />
+          <Input buttonText='Transfer' onSubmit={handleTransfer} />
         </Card>
       )}
       <Transfers transfers={transfers} accountId={accountId} />
     </>
   ) : (
-    <div className={styles.label}>{"Can't get account info"}</div>
+    <Label>{"Can't get account info"}</Label>
   );
 };
 

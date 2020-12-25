@@ -15,25 +15,34 @@ const useAccountInfo = (
   const [account, setAccount] = useState<Account>();
   const [transfers, setTransfers] = useState<Array<Transfer>>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const fetchAccountInfo = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const account = await getAccountInfo(id);
-      setAccount(account);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [id]);
-  const fetchAccountTransfers = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const transfers = await getTransfers(id);
-      setTransfers(transfers);
-    } finally {
-      setIsLoading(false);
-    }
+
+  useEffect(() => {
+    const fetchAccountInfo = async () => {
+      try {
+        setIsLoading(true);
+        const account = await getAccountInfo(id);
+        setAccount(account);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void fetchAccountInfo();
   }, [id]);
 
+  useEffect(() => {
+    const fetchAccountTransfers = async () => {
+      try {
+        setIsLoading(true);
+        const transfers = await getTransfers(id);
+        setTransfers(transfers);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void fetchAccountTransfers();
+  }, [id]);
   const withdrawMoney = useCallback(
     async (amount: number) => {
       try {
@@ -77,13 +86,6 @@ const useAccountInfo = (
     },
     [id, account]
   );
-
-  useEffect(() => {
-    void fetchAccountInfo();
-  }, [fetchAccountInfo]);
-  useEffect(() => {
-    void fetchAccountTransfers();
-  }, [fetchAccountTransfers]);
 
   return {
     account,

@@ -1,8 +1,8 @@
 .container {
   display: flex;
-  justify-content: space-around;
-  flex-basis: 150 px;
   padding: 16px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .input {

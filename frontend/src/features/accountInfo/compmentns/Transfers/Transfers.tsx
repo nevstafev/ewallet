@@ -12,7 +12,7 @@ type TransfersProps = {
 
 const Transfers: React.FC<TransfersProps> = ({ transfers, accountId }) => {
   return (
-    <Card>
+    <Card size={'medium'}>
       <Label>Account transfers</Label>
       {transfers.length <= 0 ? (
         <Label>There are no transfers yet.</Label>
